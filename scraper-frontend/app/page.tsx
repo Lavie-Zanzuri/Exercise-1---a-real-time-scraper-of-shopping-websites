@@ -32,6 +32,7 @@ export default function ProductScraper() {
   const [loading, setLoading] = useState<boolean>(false)
   const [results, setResults] = useState<ScrapeResponse | null>(null)
   const [error, setError] = useState<string>('')
+  const [sortByPrice, setSortByPrice] = useState<'none' | 'high-to-low' | 'low-to-high'>('none')
 
   const scrapingMethods: ScrapingMethod[] = [
     { id: 'basic', name: 'Basic Scraping', description: 'Requests + BeautifulSoup' },
@@ -73,6 +74,26 @@ export default function ProductScraper() {
     } finally {
       setLoading(false)
     }
+  }
+
+  const getSortedResults = (results: ProductResult[]) => {
+    if (sortByPrice === 'none') return results
+
+    // Separate valid results (with prices) from error results
+    const validResults = results.filter(result => !result.error && result.price > 0)
+    const errorResults = results.filter(result => result.error || result.price === 0)
+    
+    // Sort only the valid results
+    const sortedValidResults = [...validResults]
+    
+    if (sortByPrice === 'high-to-low') {
+      sortedValidResults.sort((a, b) => b.price - a.price)
+    } else if (sortByPrice === 'low-to-high') {
+      sortedValidResults.sort((a, b) => a.price - b.price)
+    }
+
+    // Return sorted valid results first, then error results at the end
+    return [...sortedValidResults, ...errorResults]
   }
 
   return (
@@ -159,6 +180,21 @@ export default function ProductScraper() {
                   Method: <span className="font-medium">{results.method_used}</span> | 
                   Success: <span className="font-medium">{results.successful_sites}/{results.total_sites}</span> sites
                 </div>
+                
+                <div className="mt-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Sort by Price:
+                  </label>
+                  <select
+                    value={sortByPrice}
+                    onChange={(e) => setSortByPrice(e.target.value as 'none' | 'high-to-low' | 'low-to-high')}
+                    className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-gray-900 bg-white"
+                  >
+                    <option value="none">Original Order</option>
+                    <option value="high-to-low">Most Expensive First</option>
+                    <option value="low-to-high">Cheapest First</option>
+                  </select>
+                </div>
               </div>
 
               <div className="overflow-x-auto">
@@ -173,7 +209,7 @@ export default function ProductScraper() {
                     </tr>
                   </thead>
                   <tbody>
-                    {results.results.map((result, index) => (
+                    {getSortedResults(results.results).map((result, index) => (
                       <tr key={index} className={result.error ? 'bg-red-50' : 'bg-white'}>
                         <td className="border border-gray-300 px-4 py-2 font-medium text-gray-900">
                           {result.website}
