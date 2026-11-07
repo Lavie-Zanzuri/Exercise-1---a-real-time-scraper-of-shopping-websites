@@ -5,12 +5,15 @@ import time
 import random
 import json
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 import datetime
 from typing import Dict, Any, List
 from urllib.parse import urljoin
 
 # Firecrawl API configuration
-FIRECRAWL_API_KEY = os.getenv("FIRECRAWL_API_KEY", "fc-5882adbe421e40ec86f86a56526ca0b9")
+FIRECRAWL_API_KEY = os.getenv("FIRECRAWL_API_KEY")
 FIRECRAWL_BASE_URL = "https://api.firecrawl.dev/v0"
 
 print(f"🔥 Enhanced Firecrawl Scraper Ready!")

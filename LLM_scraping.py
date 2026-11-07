@@ -5,11 +5,14 @@ import time
 import random
 import json
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 from typing import Dict, Any, Optional
 from urllib.parse import urljoin
 
 # API Keys
-GEMINI_API_KEY = "AIzaSyAmedwPZsft-WoYR45ni4Q69RnwDxL3_MI"
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 print("🔍 DEBUG: Using Gemini API key")
 
 # User agents for web scraping

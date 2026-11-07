@@ -1,2 +1,14 @@
+# Secrets
+.env
+
+# Python
 .venv/
+venv/
+__pycache__/
+*.pyc
+
+# OS
+.DS_Store
+
+# Scraper output
 *.html
