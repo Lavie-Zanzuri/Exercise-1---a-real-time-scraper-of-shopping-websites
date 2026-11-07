@@ -2,6 +2,12 @@
 
 A full-stack web app that compares a product's price across **Amazon, Best Buy, Walmart and Newegg** in real time. You type in a product name, choose a scraping method, and get the title, price, rating and number of reviews from each store. The results can be sorted by price.
 
+## Screenshot
+
+LLM scraping, with results from all 4 stores:
+
+![LLM scraping results](screenshots/llm-scraping.png)
+
 ## Three scraping methods
 
 | Method | How it works |
@@ -11,6 +17,17 @@ A full-stack web app that compares a product's price across **Amazon, Best Buy, 
 | **Firecrawl** | Uses the Firecrawl API to get JS-rendered, clean page content, then extracts the data from it |
 
 Each method handles real-world scraping problems differently, such as bot detection, CAPTCHA pages, dynamic content and inconsistent page layouts.
+
+## Known limitations
+
+Online stores actively block automated requests, so results vary by store and method:
+
+- **Best Buy** often redirects requests from outside the US to a country-selection page, so the basic method frequently can't reach the product data there.
+- **Firecrawl** requests are blocked by some of the stores (for example, a CAPTCHA page on Amazon or a 403 response on Newegg).
+- The scraper takes the **first search result** from each store, which may sometimes be an accessory or a similar model rather than the exact product.
+- Store page layouts change often, so the CSS selectors used by the basic method may need updating over time.
+
+This is why the project offers three different methods. Each one handles blocking differently, and none of them works for every store all the time.
 
 ## Tech stack
 
